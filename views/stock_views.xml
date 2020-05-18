@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <!-- TODO ensure barcode working with matrix (configurator mobile task ?) -->
+
+  <record id="stock_picking_form_matrix" model="ir.ui.view">
+    <field name="name">stock.picking.form.inherit.matrix</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//tree/field[@name='product_id']" position="attributes">
+          <attribute name="invisible">1</attribute>
+      </xpath>
+      <xpath expr="//field[@name='move_ids_without_package']" position="attributes">
+          <attribute name="widget">section_and_note_one2many</attribute>
+      </xpath>
+
+      <xpath expr="//tree/field[@name='product_id']" position="after">
+          <field name="product_template_id"
+            string="Product"
+                 attrs="{
+                'readonly': [('state', 'in', ('waiting', 'confirmed', 'assigned', 'done', 'cancel'))],
+                'required': [('display_type', '=', False)],
+            }"
+            options="{'no_open': True}"
+            widget="matrix_configurator1"/>
+          <field name="name"/>
+          <field name="product_template_attribute_value_ids" invisible="1" />
+          <field name="product_no_variant_attribute_value_ids" invisible="1" />
+          <field name="is_configurable_product" invisible="1" />
+          <field name="display_type" invisible="1"/>
+      </xpath>
+      <field name="partner_id" position="after">
+          <field name="grid" invisible="1"/>
+          <field name="grid_product_tmpl_id" invisible="1"/>
+          <field name="grid_update" invisible="1"/>
+      </field>
+      <xpath expr="//group[@name='other_infos']" position="inside">
+          <field name="report_grids" groups="base.group_no_one"/>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>
